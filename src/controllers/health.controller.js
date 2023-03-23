@@ -8,7 +8,7 @@ const health = (req, res) => {
     `Requesting ${method} ${protocol}://${hostname}${originalUrl}`,
     metaData
   )
-  res.sendStatus(200)
+  res.status(200).json({ message: 'OK' })
 }
 
 export { health }

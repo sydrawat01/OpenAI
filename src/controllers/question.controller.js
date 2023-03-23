@@ -1,7 +1,8 @@
 import logger from '../configs/logger.config'
 import azureOpenAiChatGPT from '../utils/openai.util'
+import { BadRequestError } from '../utils/error.util'
 
-const question = async (req, res) => {
+const question = async (req, res, next) => {
   const { protocol, method, hostname, originalUrl } = req
   const headers = { ...req.headers }
   const metaData = { protocol, method, hostname, originalUrl, headers }
@@ -10,22 +11,22 @@ const question = async (req, res) => {
     metaData
   )
 
-  const { prompt } = req.body
+  const { prompt } = req.query
   try {
-    if (prompt === null) {
-      throw new Error('Uh oh, no prompt was provided!')
+    if (!prompt || prompt === null) {
+      const message =
+        'The request must be of the format http://thewebsite.com/ask?prompt=your question here'
+      throw new BadRequestError(message)
     }
 
     const response = await azureOpenAiChatGPT(prompt)
     const answer = response.data.choices[0].text
 
     return res.status(200).json({
-      success: true,
       message: answer,
     })
   } catch (error) {
-    console.log(error)
-    // logger.error(error)
+    next(error)
   }
 }
 
