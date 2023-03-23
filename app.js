@@ -4,6 +4,7 @@ import cors from 'cors'
 
 import appConfig from './src/configs/app.config'
 import logger from './src/configs/logger.config'
+import { errorHandler } from './src/middlewares/errorHandler'
 import { healthRoute, askRoute } from './src/routes/index.routes'
 
 const app = express()
@@ -13,6 +14,7 @@ app.use(bodyParser.json())
 app.use(cors())
 
 app.use('/', healthRoute, askRoute)
+app.use(errorHandler)
 
 app.listen(PORT, () => {
   if (ENVIRONMENT !== 'prod')
