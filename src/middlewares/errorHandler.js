@@ -4,7 +4,7 @@ import logger from '../configs/logger.config'
 export const errorHandler = (err, req, res, next) => {
   const errStatus = err.statusCode || 500
   const errMessage = err.message || 'Something went wrong'
-  const meta = { err: err.name }
+  const meta = { err: err.name, message: errMessage }
   if (appConfig.ENVIRONMENT === 'dev') {
     res.status(errStatus).json({
       error: err.name,

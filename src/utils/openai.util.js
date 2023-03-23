@@ -1,5 +1,6 @@
 import { Configuration, OpenAIApi } from 'openai'
 import appConfig from '../configs/app.config'
+import { ServiceUnavailableError } from './error.util'
 
 const basePath = appConfig.ENDPOINT
 const model = appConfig.MODEL
@@ -32,9 +33,7 @@ const azureOpenAiChatGPT = async (prompt) => {
     )
     return completion
   } catch (error) {
-    // console.log(error)
-    return error.message
-    // throw new Error(error)
+    throw new ServiceUnavailableError(error.message)
   }
 }
 
